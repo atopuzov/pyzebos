@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/atopuzov/pyzebos.svg)](https://travis-ci.org/atopuzov/pyzebos)
+
 pyzebos
 =======
 
