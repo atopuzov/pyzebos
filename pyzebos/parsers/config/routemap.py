@@ -246,11 +246,11 @@ communityNumber = (communityNumberFormat ^ communityAANNFormat)('community')
 communityActions = (Keyword('internet') ^
                     Keyword('local-AS') ^
                     Keyword('no-advertise') ^
-                    Keyword('no-export') ^
-                    Keyword('none'))('action')
-setCommunity = Group(Suppress(Keyword('community')) + \
-                     ZeroOrMore(communityNumber) + \
-                     ZeroOrMore(communityActions) + \
+                    Keyword('no-export'))('action')
+communityInfo = Group(communityNumber +
+                      ZeroOrMore(communityActions))
+setCommunity = Group(Suppress(Keyword('community')) +
+                     OneOrMore(communityInfo) +
                      Optional(Keyword('additive')))('community')
 
 #   +-community-additive
