@@ -104,7 +104,7 @@ def suppressedKeyword(keyword):
     return Suppress(Keyword(keyword))
 
 # Access list name
-accesslistName = Word(alphanums)
+accesslistName = Word(alphanums + '-')
 
 # Interface name
 interfaceName = Word(printables)
