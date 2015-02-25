@@ -114,12 +114,12 @@ matchIPPeer = Group(Suppress('ip') +
 #       +-WORD [match ipv6 address WORD]
 #       +-prefix-list
 #         +-WORD [match ipv6 address prefix-list WORD]
-matchIpv6AddressPrefixList = Group(Suppress(Keyword('ipv6') + \
-                                            Keyword('address') + \
-                                            Keyword('prefix-list')) + \
+matchIpv6AddressPrefixList = Group(Suppress(Keyword('ipv6') +
+                                            Keyword('address') +
+                                            Keyword('prefix-list')) +
                                    Word(printables)('prefixlist'))('address')
-matchIpv6Address = Group(Suppress(Keyword('ipv6') + \
-                                  Keyword('address')) + \
+matchIpv6Address = Group(Suppress(Keyword('ipv6') +
+                                  Keyword('address')) +
                          accesslistName('accesslist'))('address')
 
 
@@ -129,10 +129,16 @@ matchIpv6Address = Group(Suppress(Keyword('ipv6') + \
 #       +-X:X::X:X [match ipv6 next-hop (X:X::X:X|WORD)]
 #       +-prefix-list
 #         +-WORD [match ipv6 next-hop prefix-list WORD]
-# _TODO_: ipv6Address
-matchIpv6NextHop = Group(Suppress(Keyword('ipv6') + \
-                                  Keyword('next-hop')) + \
-                         accesslistName('accesslist'))('next_hop')
+matchIpv6NextHopAccessList = accesslistName('accesslist')
+matchIpv6NextHopIpv6Address = ipv6Address
+matchIpv6NextHopPrefixList = (suppressedKeyword('prefix-list') +
+                              accesslistName('accesslist'))
+matchIpv6NextHopOptions = (matchIpv6NextHopAccessList ^
+                           matchIpv6NextHopIpv6Address ^
+                           matchIpv6NextHopPrefixList)
+matchIpv6NextHop = Group(Suppress(Keyword('ipv6') +
+                                  Keyword('next-hop')) +
+                         matchIpv6NextHopOptions)('next_hop')
 
 #   +-ipv6
 #     +-peer
