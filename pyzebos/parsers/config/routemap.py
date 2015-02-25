@@ -54,12 +54,12 @@ matchCommunity = Group(suppressedKeyword('community') +
 #       +-exact-match [match extcommunity (<1-99>|<100-199>|WORD) (exact-match|)]
 
 matchExtcommunity = Group(suppressedKeyword('extcommunity') +
-                          accesslistName('accesslist') + \
+                          accesslistName('accesslist') +
                           Optional(Keyword('exact-match')))('extcomunity')
 
 #   +-interface
 #     +-IFNAME [match interface IFNAME]
-matchInterface = Group(suppressedKeyword('interface') + \
+matchInterface = Group(suppressedKeyword('interface') +
                        interfaceName('interface'))('interface')
 
 #   +-ip
@@ -72,12 +72,12 @@ matchInterface = Group(suppressedKeyword('interface') + \
 
 # match ip address [WORD|<1-199>|<1300-2699>]
 # match ip address prefix-list WORD
-matchIpAddressPrefixList = Group(Suppress(Keyword('ip') + \
-                                          Keyword('address') + \
-                                          Keyword('prefix-list')) + \
+matchIpAddressPrefixList = Group(Suppress(Keyword('ip') +
+                                          Keyword('address') +
+                                          Keyword('prefix-list')) +
                                  Word(printables)('prefixlist'))('address_prefix')
-matchIpAddress = Group(Suppress(Keyword('ip') + \
-                                Keyword('address')) + \
+matchIpAddress = Group(Suppress(Keyword('ip') +
+                                Keyword('address')) +
                        Word(printables)('accesslist'))('ip_adress')
 
 #   +-ip
@@ -90,12 +90,12 @@ matchIpAddress = Group(Suppress(Keyword('ip') + \
 
 # match ip next-hop (WORD|<1-199>|<1300-2699>|PREFIXLIST)
 # match ip next-hop prefix-list WORD
-matchIpNextHopPrefixList = Group(Suppress(Keyword('ip') + \
-                                    Keyword('next-hop') + \
-                                    Keyword('prefix-list')) + \
+matchIpNextHopPrefixList = Group(Suppress(Keyword('ip') +
+                                    Keyword('next-hop') +
+                                    Keyword('prefix-list')) +
                                  Word(printables)('prefixlist'))('ip_next_hop')
-matchIpNextHop = Group(Suppress(Keyword('ip') + \
-                                Keyword('next-hop')) + \
+matchIpNextHop = Group(Suppress(Keyword('ip') +
+                                Keyword('next-hop')) +
                        accesslistName('accesslist'))('ip_next_hop')
 
 # match ip peer <1-199>|<1300-2699>|WORD
@@ -146,8 +146,8 @@ matchIpv6NextHop = Group(Suppress(Keyword('ipv6') +
 #       +-<1300-2699> [match ipv6 peer (<1-199>|<1300-2699>|WORD)]
 #       +-WORD [match ipv6 peer (<1-199>|<1300-2699>|WORD)]
 # _TODO_: ipv6Address
-matchIpv6Peer = Group(Suppress(Keyword('ipv6') + \
-                               Keyword('peer')) + \
+matchIpv6Peer = Group(Suppress(Keyword('ipv6') +
+                               Keyword('peer')) +
                       accesslistName('accesslist'))('peer')
 
 #   +-metric
@@ -160,18 +160,18 @@ matchMetric = Group(suppressedKeyword('metric') +
 #     +-egp [match origin (egp|igp|incomplete)]
 #     +-igp [match origin (egp|igp|incomplete)]
 #     +-incomplete [match origin (egp|igp|incomplete)]
-origin = Keyword('egp') ^ \
-         Keyword('igp') ^ \
-         Keyword('incomplete')
-matchOrigin = Group(suppressedKeyword('origin') + \
+origin = (Keyword('egp') ^
+          Keyword('igp') ^
+          Keyword('incomplete'))
+matchOrigin = Group(suppressedKeyword('origin') +
                     origin('origin'))('origin')
 
 #   +-route-type
 #     +-external
 #       +-type-1 [match route-type external (type-1|type-2)]
 #       +-type-2 [match route-type external (type-1|type-2)]
-routeType = Keyword('type-1') ^ \
-            Keyword('type-2')
+routeType = (Keyword('type-1') ^
+             Keyword('type-2'))
 matchRouteType = Group(suppressedKeyword('route-type') +
                        suppressedKeyword('external') +
                        routeType('type'))('route_type')
@@ -341,7 +341,7 @@ setMetricType = Group(suppressedKeyword('metric-type') +
 origins = (Keyword('egp') ^
            Keyword('igp') ^
            Keyword('incomplete'))('origin')
-setOrigin = Group(suppressedKeyword('origin') + \
+setOrigin = Group(suppressedKeyword('origin') +
                   origins)('origin')
 
 #   +-originator-id
@@ -386,8 +386,8 @@ actionToken = (Keyword('permit') ^
 routeMapTokens = (Group(OneOrMore(matchToken))('match') ^
                   Group(OneOrMore(setToken))('set'))
 
-routeMap = Group(Suppress(Keyword('route-map')) + \
-                 routeMapName('name') + \
-                 actionToken('action') + \
-                 naturalNumber('sequence') + \
+routeMap = Group(Suppress(Keyword('route-map')) +
+                 routeMapName('name') +
+                 actionToken('action') +
+                 naturalNumber('sequence') +
                  ZeroOrMore(routeMapTokens))('route_map')
