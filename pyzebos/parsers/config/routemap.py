@@ -148,7 +148,7 @@ matchIpv6NextHop = Group(Suppress(Keyword('ipv6') +
 # _TODO_: ipv6Address
 matchIpv6Peer = Group(Suppress(Keyword('ipv6') + \
                                Keyword('peer')) + \
-                      Word(printables)('accesslist'))('peer')
+                      accesslistName('accesslist'))('peer')
 
 #   +-metric
 #     +-<0-4294967295> [match metric <0-4294967295>]
