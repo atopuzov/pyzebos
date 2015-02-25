@@ -1,6 +1,9 @@
+from pyparsing import stringEnd, ParseException
 from pyzebos.parsers.config.routemap import routeMap
 import pytest
 
+
+routeMapParser = routeMap + stringEnd
 route_map_prolouge = 'route-map RouteMapName permit 10'
 
 def test_route_map_match_parse_ok():
@@ -49,4 +52,8 @@ def test_route_map_match_parse_ok():
 
     for match_statement in match_statements:
         route_map = '{}\n {}'.format(route_map_prolouge, match_statement)
-        tokens = routeMap.parseString(route_map)
+        try:
+            tokens = routeMapParser.parseString(route_map)
+        except ParseException:
+            print "Route map:\n{}".format(route_map)
+            raise
