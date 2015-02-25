@@ -57,3 +57,78 @@ def test_route_map_match_parse_ok():
         except ParseException:
             print "Route map:\n{}".format(route_map)
             raise
+
+def test_route_map_set_parse_ok():
+    set_statements = [
+        'set aggregator as 10 1.2.3.4',
+        'set as-path prepend 10',
+        'set as-path prepend 10 20',
+        'set as-path prepend 10 20 30',
+        'set as-path prepend 10 20 30 40',
+        'set atomic-aggregate ',
+        'set comm-list 10 delete',
+        'set comm-list 100 delete',
+        'set comm-list community-list-name delete',
+        'set community 1234',
+        'set community 1234 1234',
+        'set community 1234 11:22',
+        'set community 1234 additive',
+        'set community 1234 internet',
+        'set community 1234 internet additive',
+        'set community 1234 internet local-AS',
+        'set community 1234 internet local-AS additive',
+        'set community 1234 internet local-AS no-advertise',
+        'set community 1234 internet local-AS no-advertise additive',
+        'set community 1234 internet local-AS no-advertise no-export',
+        'set community 1234 internet local-AS no-advertise no-export additive',
+        'set community 1234 internet 5678 internet',
+        'set community 1234 internet 5678 internet local-AS',
+        'set community 1234 internet 5678 internet local-AS no-advertise',
+        'set community 1234 internet 5678 internet local-AS no-advertise no-export',
+        'set community 1234 internet 5678 internet local-AS no-advertise no-export additive',
+        'set community 1234 internet 11:22 additive',
+        'set community 1234 internet 11:22 internet',
+        'set community 1234 internet 11:22 internet local-AS',
+        'set community 11:22',
+        'set community 11:22 1234 local-AS',
+        # 'set community no-export',
+        # 'set community no-advertise',
+        # 'set community no-export',
+        # 'set community internet 11:22',
+        # 'set community internet 11:22 internet',
+        # 'set dampening ',
+        'set dampening 10',
+        'set dampening 10 100 100 100',
+        'set dampening 10 100 100 100 10',
+        'set extcommunity rt 11:22',
+        'set extcommunity rt 11:22 33:44',
+        'set extcommunity rt 11:22 33:44 55:66',
+        'set extcommunity soo 11:22',
+        'set extcommunity soo 11:22 33:44',
+        'set extcommunity soo 11:22 33:44 55:66',
+        'set ip next-hop 1.2.3.4',
+        'set ipv6 next-hop ::1',
+        'set ipv6 next-hop local ::1',
+        'set local-preference 10',
+        # 'set metric +10',
+        'set metric 100',
+        # 'set metric -21',
+        'set metric-type external',
+        'set metric-type internal',
+        'set metric-type type-1',
+        'set metric-type type-2',
+        'set origin egp',
+        'set origin igp',
+        'set origin incomplete',
+        'set originator-id 1.2.3.4',
+        'set tag 100',
+        'set weight 100',
+    ]
+
+    for set_statement in set_statements:
+        route_map = '{}\n {}'.format(route_map_prolouge, set_statement)
+        try:
+            tokens = routeMapParser.parseString(route_map)
+        except ParseException:
+            print "Route map:\n{}".format(route_map)
+            raise
