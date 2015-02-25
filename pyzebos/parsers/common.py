@@ -22,8 +22,8 @@
 # SOFTWARE.
 
 from pyparsing import (Combine, Suppress, SkipTo, LineEnd, Literal, Word, nums,
-                       alphanums, printables, hexnums, stringEnd, Group,
-                       Optional, OneOrMore, Keyword)
+                       alphanums, printables, hexnums, Group, Optional, OneOrMore,
+                       Keyword)
 
 
 # IP Address

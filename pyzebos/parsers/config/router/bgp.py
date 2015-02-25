@@ -643,6 +643,6 @@ bgpTokens = (
 )
 
 routerBGP = Group(suppressedKeyword('router') +
-                   suppressedKeyword('bgp') +
-                   naturalNumber('as_number')  +
-                   ZeroOrMore(bgpTokens))('router_bgp')
+                  suppressedKeyword('bgp') +
+                  naturalNumber('as_number')  +
+                  ZeroOrMore(bgpTokens))('router_bgp')

@@ -23,7 +23,7 @@
 
 from pyparsing import (Group, OneOrMore, ZeroOrMore, Suppress, Optional,
                        Keyword, Literal, Word, nums, printables)
-from common import (ipv4Address, ipv6Address, naturalNumber, accesslistName,
+from ..common import (ipv4Address, ipv6Address, naturalNumber, accesslistName,
                     interfaceName, routeMapName, suppressedKeyword)
 
 # Match operation
