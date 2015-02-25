@@ -314,10 +314,10 @@ setLocalPreference = Group(suppressedKeyword('local-preference') +
 #   +-metric
 #     +-<+/-metric> [set metric (<0-4294967295>|<+/-metric>)]
 #     +-<0-4294967295> [set metric (<0-4294967295>|<+/-metric>)]
-setMetricRelative = (Keyword('+') ^
-                     Keyword('-'))
+setMetricRelative = (Literal('+') ^
+                     Literal('-'))
 setMetric = Group(suppressedKeyword('metric') +
-                  Optional(setMetricRelative) +
+                  Optional(setMetricRelative)('relative') +
                   naturalNumber('metric'))('metric')
 
 #   +-metric-type
