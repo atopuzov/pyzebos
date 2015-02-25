@@ -24,9 +24,9 @@
 
 from pyparsing import (Group, OneOrMore, ZeroOrMore, Keyword, Optional, Word,
                        alphanums)
-from common import (ipv4Address, ipv4Prefix, ipAddressNetwork,
-                    suppressedKeyword, accesslistName, routeMapName,
-                    interfaceName, naturalNumber)
+from ...common import (ipv4Address, ipv4Prefix, ipAddressNetwork,
+                       suppressedKeyword, accesslistName, routeMapName,
+                       interfaceName, naturalNumber)
 
 # +-area
 #   +-<0-4294967295>
@@ -506,7 +506,7 @@ ospfTokens = (Group(OneOrMore(area))('areas') ^
               Group(OneOrMore(summaryAddress))('summary_addresses') ^
               timers)
 
-routerOspf = Group(suppressedKeyword('router') +
+routerOSPF = Group(suppressedKeyword('router') +
                    suppressedKeyword('ospf') +
                    Optional(naturalNumber('process'), default='0') +
                    ZeroOrMore(ospfTokens))('router_ospf')

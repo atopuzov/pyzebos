@@ -24,9 +24,9 @@
 
 from pyparsing import (Literal, Keyword, Group, Optional, OneOrMore, ZeroOrMore,
                        Word, alphanums, SkipTo, LineEnd, Suppress)
-from common import (ipv4Address, ipv6Address, ipv4Prefix, naturalNumber,
-                    suppressedKeyword, routeMapName, accesslistName,
-                    interfaceName)
+from ...common import (ipv4Address, ipv6Address, ipv4Prefix, naturalNumber,
+                      suppressedKeyword, routeMapName, accesslistName,
+                      interfaceName)
 
 direction = (Keyword('in') ^
              Keyword('out'))('direction')

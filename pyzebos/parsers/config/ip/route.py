@@ -22,8 +22,8 @@
 # SOFTWARE.
 
 from pyparsing import (OneOrMore, Word, Group, Optional, printables)
-from common import (ipv4Prefix, ipv4Address, naturalNumber, suppressedKeyword,
-                    interfaceName, ipAddressNetwork)
+from ...common import (ipv4Prefix, ipv4Address, naturalNumber, suppressedKeyword,
+                       interfaceName, ipAddressNetwork)
 
 ipRouteTag = (suppressedKeyword('tag') +
               naturalNumber('tag'))
