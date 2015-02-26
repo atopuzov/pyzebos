@@ -438,7 +438,8 @@ redistributeProtocol = (Keyword('bgp') ^
                         Keyword('intranet') ^
                         Keyword('isis') ^
                         Keyword('kernel') ^
-                        (Keyword('ospf') + naturalNumber('process_id')) ^
+                        (Keyword('ospf') +
+                         Optional(naturalNumber('process_id'), default=0)) ^
                         Keyword('rip') ^
                         Keyword('static'))
 redistribute = Group(suppressedKeyword('redistribute') +
