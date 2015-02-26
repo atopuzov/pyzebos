@@ -452,11 +452,6 @@ refresh = Group(suppressedKeyword('refresh') +
                 suppressedKeyword('timer') +
                 naturalNumber('timer'))('refresh_timer')
 
-# +-router-id
-#   +-A.B.C.D [router-id A.B.C.D]
-routerId = Group(suppressedKeyword('router-id') +
-                 ipv4Address('address'))('router_id')
-
 # +-summary-address
 #   +-A.B.C.D/M [summary-address A.B.C.D/M (not-advertise|tag <0-4294967295>|)]
 #     +-not-advertise [summary-address A.B.C.D/M (not-advertise|tag <0-4294967295>|)]
@@ -502,7 +497,6 @@ ospfTokens = (Group(OneOrMore(area))('areas') ^
               Group(OneOrMore(passiveInterface))('passive_interfaces') ^
               Group(OneOrMore(redistribute))('redistributes') ^
               refresh ^
-              routerId ^
               Group(OneOrMore(summaryAddress))('summary_addresses') ^
               timers)
 
