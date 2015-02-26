@@ -463,7 +463,7 @@ summaryAddressOptions = (Keyword('not-advertise') ^
                         summaryAddressTag)
 summaryAddress = Group(suppressedKeyword('summary-address') +
                        ipv4Prefix('network') +
-                       summaryAddressOptions)('summary_address')
+                       Optional(summaryAddressOptions))('summary_address')
 
 # +-timers
 #   +-spf
