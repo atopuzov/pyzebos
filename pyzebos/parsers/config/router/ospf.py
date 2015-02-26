@@ -46,7 +46,7 @@ areaDefaultCost = Group(suppressedKeyword('default-cost') +
 #     +-export-list
 #       +-NAME [area (A.B.C.D|<0-4294967295>) export-list NAME]
 areaExportList = Group(suppressedKeyword('export-list') +
-                       Word(alphanums))('export_list')
+                       accesslistName)('export_list')
 
 #     +-filter-list
 #       +-access
@@ -63,7 +63,7 @@ areaFilterDirection = (Keyword('in') ^
                        Keyword('out'))
 areaFilter = Group(suppressedKeyword('filter-list') +
                    areaFilterType +
-                   Word(alphanums) +
+                   accesslistName +
                    areaFilterDirection)('filter_list')
 
 #     +-import-list
