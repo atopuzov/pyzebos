@@ -24,7 +24,7 @@
 
 from pyparsing import (Group, OneOrMore, ZeroOrMore, Keyword, Optional, Word,
                        alphanums)
-from ...common import (ipv4Address, ipv4Prefix, ipAddressNetwork,
+from ...common import (ipv4Address, ipv4Prefix, ipv4AddressNetwork,
                        suppressedKeyword, accesslistName, routeMapName,
                        interfaceName, naturalNumber)
 
@@ -328,7 +328,7 @@ maximumArea = Group(suppressedKeyword('maximum-area') +
 #     +-area
 #       +-<0-4294967295> [network A.B.C.D/M area (A.B.C.D|<0-4294967295>)]
 #       +-A.B.C.D [network A.B.C.D/M area (A.B.C.D|<0-4294967295>)]
-networkNetwork = (ipAddressNetwork ^
+networkNetwork = (ipv4AddressNetwork ^
                   ipv4Prefix)
 network = Group(suppressedKeyword('network') +
                 networkNetwork('network') +

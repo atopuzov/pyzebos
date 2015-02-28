@@ -23,7 +23,7 @@
 
 from pyparsing import (OneOrMore, Word, Group, Optional, printables)
 from ...common import (ipv4Prefix, ipv4Address, naturalNumber, suppressedKeyword,
-                       interfaceName, ipAddressNetwork)
+                       interfaceName, ipv4AddressNetwork)
 
 ipRouteTag = (suppressedKeyword('tag') +
               naturalNumber('tag'))
@@ -35,7 +35,7 @@ ipRouteOptions = OneOrMore(naturalNumber('distance') ^
 ipRouteGateway = (ipv4Address('address') ^
                   interfaceName('interface'))
 ipRouteDestination = (ipv4Prefix('prefix') ^
-                      ipAddressNetwork('network'))
+                      ipv4AddressNetwork('network'))
 ipRoute = Group(suppressedKeyword('ip') +
                 suppressedKeyword('route') +
                 ipRouteDestination('destination') +

@@ -91,7 +91,7 @@ ipv6Address = Combine(
 # IP Prefix
 ipv4Prefix =  Group(ipv4Address('network') + Suppress(Literal('/')) + Word(nums)('length'))
 
-ipAddressNetwork = Group(ipv4Address('network') +
+ipv4AddressNetwork = Group(ipv4Address('network') +
                            ipv4Address('netmask'))
 
 # ZebOS comment
