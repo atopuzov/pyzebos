@@ -28,10 +28,10 @@ from ..common import suppressedKeyword, naturalNumber, ipv4Prefix
 
 action = (Keyword('permit') ^
           Keyword('deny'))
-le = (suppressedKeyword('le')
-      + naturalNumber)('le')
-ge = (suppressedKeyword('ge')
-      + naturalNumber)('ge')
+le = (suppressedKeyword('le') +
+      naturalNumber)('le')
+ge = (suppressedKeyword('ge') +
+      naturalNumber)('ge')
 
 ipPrefixPrefix = (ipv4Prefix ^
                   Keyword('any'))
