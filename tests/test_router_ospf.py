@@ -191,7 +191,7 @@ area_statements = [
     'redistribute static',
 ]
 
-def test_route_map_match_parse_ok():
+def test_ospf_parse_ok():
     for area_statement in area_statements:
         router_ospf = '{}\n {}'.format(router_ospf_prolouge, area_statement)
         try:
