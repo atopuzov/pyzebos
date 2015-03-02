@@ -38,8 +38,8 @@ standardAccessListAddress = (ipv4AddressNetwork ^
                              ipv4AddressHost ^
                              ipv4AddressAny ^
                              ipv4Address)('address')
-remarkAction = (Suppress(Keyword('remark') +
-                         SkipTo(LineEnd())))
+remarkAction = (suppressedKeyword('remark') +
+                         SkipTo(LineEnd())('remark'))
 standardAccessListOtherActions = (action +
                                   standardAccessListAddress)
 standardAccessListActions = (remarkAction ^
