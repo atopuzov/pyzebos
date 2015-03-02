@@ -53,6 +53,6 @@ ospfNeighbourTableRow = Group(ipv4Address('neighbour_id') +
                               ipv4Address('address') +
                               Word(alphanums)('interface'))('neighbour')
 
-ospfNeighbour = Group(ospfNeighbourStart +
-                      ospfNeighbourTableHeader +
-                      OneOrMore(ospfNeighbourTableRow)('neighbours'))('process')
+ospfNeighbour = OneOrMore(Group(ospfNeighbourStart +
+                                ospfNeighbourTableHeader +
+                                OneOrMore(ospfNeighbourTableRow)('neighbours'))('process'))
