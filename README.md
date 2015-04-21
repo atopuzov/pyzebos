@@ -5,3 +5,7 @@ pyzebos
 =======
 
 Parser for ZebOS (Quagga) router configuration using pyparsing
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/atopuzov/pyzebos/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
