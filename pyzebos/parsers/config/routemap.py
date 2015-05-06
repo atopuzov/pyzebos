@@ -245,9 +245,9 @@ setCommList = Group(suppressedKeyword('comm-list') +
 #     +-no-export [set community [<1-65535>|AA:NN|internet|local-AS|no-advertise|no-export] (additive|)]
 #     +-none [set community (none)]
 communityNumberFormat = naturalNumber
-communityAANNFormat = Group(Word(nums, max=2)('aa') +
+communityAANNFormat = Group(Word(nums, max=5)('aa') +
                             Literal(':') +
-                            Word(nums, max=2)('nn'))
+                            Word(nums, max=5)('nn'))
 communityNumber = (communityNumberFormat ^ communityAANNFormat)('community')
 communityActions = (Keyword('internet') ^
                     Keyword('local-AS') ^
