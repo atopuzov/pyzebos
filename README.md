@@ -4,4 +4,10 @@
 pyzebos
 =======
 
+[![Join the chat at https://gitter.im/atopuzov/pyzebos](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/atopuzov/pyzebos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Parser for ZebOS (Quagga) router configuration using pyparsing
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/atopuzov/pyzebos/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
