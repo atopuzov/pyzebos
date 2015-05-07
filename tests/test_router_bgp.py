@@ -86,7 +86,16 @@ bgp_statements = [
     'neighbor 3ffe:506::1 remote-as 7657',
     'neighbor 3ffe:506::1 interface eth1',
     'network synchronization',
-    # 'network 2.0.0.0',
+    'network 2.0.0.0',
+    'network 2.0.0.0 backdoor',
+    'network 2.0.0.0 mask 255.255.255.0',
+    'network 2.0.0.0 mask 255.255.255.0 backdoor',
+    'network 2.0.0.0 mask 255.255.255.0 route-map route-map-name',
+    'network 2.0.0.0 mask 255.255.255.0 route-map route-map-name backdoor',
+    'network 2.0.0.0 route-map route-map-name',
+    'network 2.0.0.0 route-map route-map-name backdoor',
+    'network 2.0.0.0/24 route-map route-map-name',
+    'network 2.0.0.0/24 route-map route-map-name backdoor',
 ]
 
 def test_bgp_parse_ok():

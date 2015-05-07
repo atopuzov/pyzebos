@@ -515,24 +515,23 @@ neighbour = Group(suppressedKeyword('neighbor') +
 #   +-synchronization [network synchronization]
 networkBackdoor = Keyword('backdoor')
 networkRouteMap = (suppressedKeyword('route-map') +
-                   routeMapName +
-                   Optional(networkBackdoor))
-networkCommonOptions = (networkBackdoor ^
-                        networkRouteMap)
-networkAddressOptionsMask = (suppressedKeyword('mask') +
-                         ipv4Address('netmask') +
-                             networkCommonOptions)
-networkAddressOptions = (networkAddressOptionsMask ^
-                         networkCommonOptions)
-networkAddress = (ipv4Address +
+                   routeMapName)
+networkMask = (suppressedKeyword('mask') +
+               ipv4Address('netmask'))
+networkAddressOptions = (Optional(networkMask) +
+                         Optional(networkRouteMap) +
+                         Optional(networkBackdoor))
+networkAddress = (ipv4Address('network') +
                  networkAddressOptions)
-networkPrefix = (ipv4Prefix +
-                networkCommonOptions)
+networkPrefixOptions = (Optional(networkRouteMap) +
+                        Optional(networkBackdoor))
+networkPrefix = (ipv4Prefix('prefix') +
+                 networkPrefixOptions)
 networkOptions = (networkAddress ^
                   networkPrefix ^
                   Keyword('synchronization'))
 network = (Keyword('network') +
-          networkOptions)
+           networkOptions)
 
 # +-address-family
 #   +-ipv4 [address-family ipv4]
