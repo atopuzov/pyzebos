@@ -96,6 +96,11 @@ bgp_statements = [
     'network 2.0.0.0 route-map route-map-name backdoor',
     'network 2.0.0.0/24 route-map route-map-name',
     'network 2.0.0.0/24 route-map route-map-name backdoor',
+    'aggregate-address 10.0.0.0/24',
+    'aggregate-address 10.0.0.0/24 as-set',
+    'aggregate-address 10.0.0.0/24 as-set summary-only',
+    'aggregate-address 10.0.0.0/24 summary-only',
+    'aggregate-address 10.0.0.0/24 summary-only as-set',
 ]
 
 def test_bgp_parse_ok():

@@ -563,7 +563,7 @@ aggregateAddressOptions = (Keyword('as-set') ^
                            Keyword('summary-only'))
 aggregateAddress = Group(suppressedKeyword('aggregate-address') +
                          ipv4Prefix('prefix') +
-                         OneOrMore(aggregateAddressOptions))('aggregate-address')
+                         ZeroOrMore(aggregateAddressOptions))('aggregate-address')
 
 # +-redistribute
 #   +-connected [redistribute (kernel|connected|static|rip|ospf|isis|intranet)]
