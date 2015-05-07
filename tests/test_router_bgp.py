@@ -101,6 +101,21 @@ bgp_statements = [
     'aggregate-address 10.0.0.0/24 as-set summary-only',
     'aggregate-address 10.0.0.0/24 summary-only',
     'aggregate-address 10.0.0.0/24 summary-only as-set',
+    # Redistribution
+    'redistribute connected route-map route-map-name',
+    'redistribute connected',
+    'redistribute intranet route-map route-map-name',
+    'redistribute intranet',
+    'redistribute isis route-map route-map-name',
+    'redistribute isis',
+    'redistribute kernel route-map route-map-name',
+    'redistribute kernel',
+    'redistribute ospf route-map route-map-name',
+    'redistribute ospf',
+    'redistribute rip route-map route-map-name',
+    'redistribute rip',
+    'redistribute static route-map route-map-name',
+    'redistribute static',
 ]
 
 def test_bgp_parse_ok():

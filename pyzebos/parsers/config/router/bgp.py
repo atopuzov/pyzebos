@@ -587,14 +587,13 @@ aggregateAddress = Group(suppressedKeyword('aggregate-address') +
 #   +-static [redistribute (kernel|connected|static|rip|ospf|isis|intranet)]
 #     +-route-map
 #       +-WORD [redistribute (kernel|connected|static|rip|ospf|isis|intranet) route-map WORD]
-redistributeProtocol = (Keyword('bgp')                ^
-                        Keyword('connected')          ^
-                        Keyword('intranet')           ^
-                        Keyword('isis')               ^
-                        Keyword('kernel')             ^
-                        (Keyword('ospf') +
-                         naturalNumber('process_id')) ^
-                        Keyword('rip')                ^
+redistributeProtocol = (Keyword('bgp')       ^
+                        Keyword('connected') ^
+                        Keyword('intranet')  ^
+                        Keyword('isis')      ^
+                        Keyword('kernel')    ^
+                        Keyword('ospf')      ^
+                        Keyword('rip')       ^
                         Keyword('static'))
 
 redistribute = Group(suppressedKeyword('redistribute') +
