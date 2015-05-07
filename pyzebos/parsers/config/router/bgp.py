@@ -350,7 +350,7 @@ neighbourPassive = Keyword('passive')
 #     +-peer-group
 #       +-WORD [neighbor (A.B.C.D|X:X::X:X) peer-group WORD]
 neighbourPeerGroup = (suppressedKeyword('peer-group') +
-                      naturalNumber('peer_group'))
+                      Optional(Word(alphanums))('peer_group'))
 
 #     +-port
 #       +-<0-65535> [neighbor (A.B.C.D|X:X::X:X|WORD) port <0-65535>]
