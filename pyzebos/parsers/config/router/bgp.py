@@ -264,6 +264,18 @@ neighbourAttributeUnchanged = (suppressedKeyword('attribute-unchanged') +
 #           +-receive [neighbor (A.B.C.D|X:X::X:X|WORD) capability orf prefix-list (both|receive|send)]
 #           +-send [neighbor (A.B.C.D|X:X::X:X|WORD) capability orf prefix-list (both|receive|send)]
 #       +-route-refresh [neighbor (A.B.C.D|X:X::X:X|WORD) capability route-refresh]
+neighbourCapabilityOrfOption = (Keyword('both') ^
+                                Keyword('receive') ^
+                                Keyword('send'))
+neighbourCapabilityOrf = (Keyword('orf') +
+                          Keyword('prefix-list') +
+                          neighbourCapabilityOrfOption)
+neighbourCapabilityOptions = (Keyword('dynamic') ^
+                              Keyword('graceful-restart') ^
+                              neighbourCapabilityOrf ^
+                              Keyword('route-refresh'))
+neighbourCapability = Group(suppressedKeyword('capability') +
+                            neighbourCapabilityOptions)
 
 #     +-collide-established [neighbor (A.B.C.D|X:X::X:X|WORD) collide-established]
 neighbourCollideEstablished = Keyword('collide-established')
@@ -454,6 +466,7 @@ neighbourOptions = (neighbourActivate                 ^
                     neighbourAllowasIn                ^
                     neighbourAsOriginationinterval    ^
                     neighbourAttributeUnchanged       ^
+                    neighbourCapability               ^
                     neighbourCollideEstablished       ^
                     neighbourConnextionRetryTime      ^
                     neighbourDefaultOriginate         ^
