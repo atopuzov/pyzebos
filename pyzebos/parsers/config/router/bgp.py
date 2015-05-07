@@ -421,8 +421,9 @@ neighbourTimersRegular = (naturalNumber('keepalive') +
                           naturalNumber('holdtime'))
 neighbourTimersConnect = (suppressedKeyword('connect') +
                           naturalNumber('connect'))
-neighbourTimers = Group(neighbourTimersRegular ^
-                        neighbourTimersConnect)('timers')
+neighbourTimers = Group(suppressedKeyword('timers') +
+                        Optional(neighbourTimersRegular ^
+                                 neighbourTimersConnect))('timers')
 
 #     +-transparent-as [neighbor (A.B.C.D|X:X::X:X|WORD) transparent-as]
 neighbourTransparentAs = Keyword('transparent-as')

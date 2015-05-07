@@ -75,8 +75,8 @@ bgp_statements = [
     'neighbor 10.10.0.72 shutdown',
     'neighbor 10.10.10.10 soft-reconfiguration inbound',
     'neighbor 10.10.10.10 strict-capability-match',
-    # 'neighbor 10.10.10.10 timers 60 120',
-    # 'neighbor 10.10.10.10 timers connect 10',
+    'neighbor 10.10.10.10 timers 60 120',
+    'neighbor 10.10.10.10 timers connect 10',
     'neighbor 10.10.10.10 transparent-as',
     'neighbor 10.10.10.10 transparent-nexthop',
     'neighbor 10.10.0.73 unsuppress-map mymap',
@@ -116,6 +116,8 @@ bgp_statements = [
     'redistribute rip',
     'redistribute static route-map route-map-name',
     'redistribute static',
+    # Timers
+    'timers bgp 10 10'
 ]
 
 def test_bgp_parse_ok():
