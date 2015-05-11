@@ -1,4 +1,3 @@
-import pytest
 from pyparsing import stringEnd, ParseException
 from pyzebos.parsers.show.ospf_database import routerLSA, networkLSA, summaryLSA, externalLSA
 
@@ -9,7 +8,7 @@ summaryLSAParser = summaryLSA + stringEnd
 externalLSAParser = externalLSA + stringEnd
 
 
-lsas = [
+network_lsas = [
     '''\
 
                 Net Link States (Area 0.0.0.0)
@@ -25,6 +24,10 @@ lsas = [
   Network Mask: /30
         Attached Router: 10.168.95.134
         Attached Router: 10.168.66.9
+    ''',
+    '''\
+
+                Net Link States (Area 0.0.0.0)
 
   LS age: 1475
     Options: 0x2 (-|-|-|-|-|-|E|-)
@@ -37,6 +40,10 @@ lsas = [
   Network Mask: /30
         Attached Router: 10.168.95.135
         Attached Router: 10.168.66.9
+    ''',
+    '''\
+
+                Net Link States (Area 0.0.0.0)
 
   LS age: 1723
     Options: 0x2 (-|-|-|-|-|-|E|-)
@@ -50,6 +57,10 @@ lsas = [
         Attached Router: 10.1.0.2
         Attached Router: 10.1.0.1
         Attached Router: 10.1.118.46
+    ''',
+    '''\
+
+                Net Link States (Area 0.0.0.0)
 
   LS age: 74
     Options: 0x22 (-|-|DC|-|-|-|E|-)
@@ -66,7 +77,7 @@ lsas = [
 ]
 
 def test_netowrk_lsa_parse_ok():
-    for lsa in lsas:
+    for lsa in network_lsas:
         try:
             tokens = networkLSAParser.parseString(lsa)
         except ParseException:
