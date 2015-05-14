@@ -1,0 +1,9 @@
+router ospf
+ ospf router-id 10.11.12.13
+ redistribute kernel metric-type 1 route-map routemap_name_1
+ redistribute static metric-type 1 route-map routemap_name_2
+ network 10.0.103.144/28 area 0
+ network 10.1.103.144/28 area 1
+ network 10.2.103.144/28 area 2
+ network 10.3.103.144/28 area 3
+ network 10.4.103.144/28 area 1.1.1.1

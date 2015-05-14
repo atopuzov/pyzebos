@@ -1,0 +1,2 @@
+router ospf
+ ospf router-id 10.11.12.13
