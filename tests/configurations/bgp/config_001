@@ -1,0 +1,21 @@
+router bgp 64699
+ bgp log-neighbor-changes
+ bgp router-id 192.168.1.1
+ redistribute connected
+ timers bgp 4 16
+ aggregate-address 10.0.0.0/8 as-set summary-only
+ auto-summary
+ bgp always-compare-med
+ neighbor 10.11.12.13 remote-as 64698
+ neighbor 10.11.12.13 route-map deny_all in
+ neighbor 10.11.12.13 route-map routemap_name out
+ neighbor 10.22.33.1 remote-as 64608
+ neighbor 10.22.33.1 route-map deny_all in
+ neighbor 10.22.33.1 route-map routempa_name out
+ neighbor 1ce:c01d:bee2:15:a5:900d:a5:11fe remote-as 64608
+ !
+ address-family ipv6
+ neighbor 1ce:c01d:bee2:15:a5:900d:a5:11fe activate
+ neighbor 1ce:c01d:bee2:15:a5:900d:a5:11fe route-map routemap_name in
+ neighbor 1ce:c01d:bee2:15:a5:900d:a5:11fe route-map routemap_name out
+ exit-address-family
