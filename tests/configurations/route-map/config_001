@@ -1,0 +1,3 @@
+route-map deny_all deny 10
+ match ip address prefix-list deny_all_pl
+ set metric 65000
