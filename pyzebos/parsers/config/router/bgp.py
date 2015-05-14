@@ -627,13 +627,14 @@ timers = Group(suppressedKeyword('timers') +
                naturalNumber('keepalive') +
                naturalNumber('holdtime'))('timers')
 
-addressFamilyJoined = (
-    addressFamily + (
-        autoSummary ^
-        Group(ZeroOrMore(neighbour))('neighbours') ^
-        Group(ZeroOrMore(network))('networks')) +
-    Suppress(exitAddressFamily)
-)
+addressFamilyBGPTokens = (autoSummary ^
+                          Group(redistribute)('redistributes') ^
+                          Group(neighbour)('neighbours') ^
+                          Group(network)('networks'))
+
+addressFamilyJoined = (addressFamily +
+                       ZeroOrMore(addressFamilyBGPTokens) +
+                       Suppress(exitAddressFamily))
 
 bgpIgnoreLine = Suppress(Literal('!') +
                          SkipTo(LineEnd()))
@@ -644,8 +645,6 @@ bgpTokens = (
     distance ^
     Group(OneOrMore(neighbour))('neighbours') ^
     Group(OneOrMore(network))('networks') ^
-    # addressFamily ^
-    # exitAddressFamily ^
     Group(addressFamilyJoined)('address-family') ^
     aggregateAddress ^
     Group(OneOrMore(redistribute))('redistributes') ^
