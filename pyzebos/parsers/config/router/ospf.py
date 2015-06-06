@@ -468,14 +468,14 @@ redistributeStatic = Group(redistributeKeyword +
                            suppressedKeyword('static') +
                            redistributeOptions)
 
-redistribute = (Optional(redistributeKernel, default=None)('kernel') +
-                Optional(redistributeConnected, default=None)('connected') +
-                Optional(redistributeStatic, default=None)('static') +
-                Optional(redistributeRIP, default=None)('rip') +
-                Optional(redistributeOSPF, default=None)('ospf') +
-                Optional(redistributeBGP, default=None)('bgp') +
-                Optional(redistributeISIS, default=None)('isis') +
-                Optional(redistributeIntranet, default=None)('intranet'))
+redistribute = (Optional(redistributeKernel)('kernel') +
+                Optional(redistributeConnected)('connected') +
+                Optional(redistributeStatic)('static') +
+                Optional(redistributeRIP)('rip') +
+                Optional(redistributeOSPF)('ospf') +
+                Optional(redistributeBGP)('bgp') +
+                Optional(redistributeISIS)('isis') +
+                Optional(redistributeIntranet)('intranet'))
 
 # +-refresh
 #   +-timer
@@ -514,7 +514,6 @@ ospfTokens = (ZeroOrMore(ospf) +
               ZeroOrMore(compatible) +
               ZeroOrMore(autoCost) +
               Optional(maxConcurrentDD) +
-              ZeroOrMore(enable) +
               ZeroOrMore(enable) +
               Group(redistribute)('redistribute') +
               Group(ZeroOrMore(passiveInterface))('passive_interfaces') +
