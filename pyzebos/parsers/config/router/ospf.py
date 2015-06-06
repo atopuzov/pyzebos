@@ -26,7 +26,7 @@ from pyparsing import (Group, OneOrMore, ZeroOrMore, Keyword, Optional, Word,
                        alphanums)
 from ...common import (ipv4Address, ipv4Prefix, ipv4AddressNetwork,
                        suppressedKeyword, accesslistName, routeMapName,
-                       interfaceName, naturalNumber)
+                       distributeListName, interfaceName, naturalNumber)
 
 # +-area
 #   +-<0-4294967295>
@@ -36,7 +36,7 @@ areaId = (naturalNumber ^
 #     +-authentication [area (A.B.C.D|<0-4294967295>) authentication]
 #       +-message-digest [area (A.B.C.D|<0-4294967295>) authentication message-digest]
 areaAuthentication = Group(suppressedKeyword('authentication') +
-                           Optional(Keyword('message-digest')))('authentication')
+                           Optional(Keyword('message-digest')('authentication_type')))('authentication')
 
 #     +-default-cost
 #       +-<0-16777215> [area (A.B.C.D|<0-4294967295>) default-cost <0-16777215>]
@@ -189,15 +189,15 @@ areaOptions = (areaAuthentication ^
                areaVirtualLink)
 
 area = Group(suppressedKeyword('area') +
-             areaId +
+             areaId('area_id') +
              areaOptions)('area')
 
 # +-auto-cost
 #   +-reference-bandwidth
 #     +-<1-4294967> [auto-cost reference-bandwidth <1-4294967>]
-autoCost = Group(suppressedKeyword('auto-cost') +
-                 suppressedKeyword('reference-bandwidth') +
-                 naturalNumber('bandwidth'))
+autoCost = (suppressedKeyword('auto-cost') +
+            suppressedKeyword('reference-bandwidth') +
+            naturalNumber('refference_bandwidth'))
 
 # +-compatible
 #   +-rfc1583 [compatible rfc1583]
@@ -226,21 +226,27 @@ defaultInformation = Group(suppressedKeyword('default-information') +
 
 # +-default-metric
 #   +-<1-16777214> [default-metric <1-16777214>]
-defaultMetric = Group(suppressedKeyword('default-metric') +
-                 naturalNumber('metric'))('default_metric')
+defaultMetric = (suppressedKeyword('default-metric') +
+                 naturalNumber)('default_metric')
 
 # +-distance
 #   +-<1-255> [distance <1-255>]
 #   +-ospf
 #     +-external
 #     +-inter-area
-#     +-intra-area
-distanceOspfTypes = (Keyword('external') ^
-                     Keyword('inter-area') ^
-                     Keyword('intra-area'))
-distanceOspf = (Keyword('ospf') +
-                OneOrMore(distanceOspfTypes +
-                         naturalNumber('distance')))
+#     +-intra-are
+distanceOspfExternal = (suppressedKeyword('external') +
+                        naturalNumber)('external')
+distanceOspfInterArea = (suppressedKeyword('inter-area') +
+                        naturalNumber)('inter-area')
+distanceOspfIntraArea = (suppressedKeyword('intra-area') +
+                        naturalNumber)('intra-area')
+distanceOspfTypes = (distanceOspfExternal ^
+                     distanceOspfInterArea ^
+                     distanceOspfIntraArea)
+distanceOspf = (suppressedKeyword('ospf') +
+                OneOrMore(distanceOspfTypes))
+
 distanceOptions = (naturalNumber('distance') ^
                    distanceOspf)
 distance = Group(suppressedKeyword('distance') +
@@ -266,14 +272,15 @@ distributeListProtocols = (Keyword('bgp')      ^
                           Keyword('kernel')    ^
                           Keyword('rip')       ^
                           Keyword('static')    ^
-                          (Keyword('ospf') + Optional(naturalNumber('process_id'))))
-distributeListIn = Keyword('in')
-distributeListOut = (Keyword('out') +
-                    distributeListProtocols)
+                          Keyword('ospf'))
+distributeListIn = Keyword('in')('direction')
+distributeListOut = (Keyword('out')('direction') +
+                     distributeListProtocols('protocol') +
+                     naturalNumber)
 distributeListOptions = (distributeListIn ^
                          distributeListOut)
 distributeList = Group(suppressedKeyword('distribute-list') +
-                       accesslistName('accesslist') +
+                       distributeListName('accesslist') +
                        distributeListOptions)('distribute_list')
 
 # +-enable
@@ -300,8 +307,8 @@ host = Group(suppressedKeyword('host') +
 
 # +-max-concurrent-dd
 #   +-<1-65535> [max-concurrent-dd <1-65535>]
-maxConcurrentDD = Group(suppressedKeyword('max-concurrent-dd') +
-                        naturalNumber('value'))('max_concurrent_dd')
+maxConcurrentDD = (suppressedKeyword('max-concurrent-dd') +
+                   naturalNumber)('max_concurrent_dd')
 
 # +-max-unuse-lsa
 #   +-<0-65535> [max-unuse-lsa <0-65535>]
@@ -315,8 +322,8 @@ maxUnusePacket = Group(suppressedKeyword('max-unuse-packet') +
 
 # +-maximum-area
 #   +-<1-4294967294> [maximum-area <1-4294967294>]
-maximumArea = Group(suppressedKeyword('maximum-area') +
-                     naturalNumber('value'))('maximum_area')
+maximumArea = (suppressedKeyword('maximum-area') +
+               naturalNumber)('maximum_area')
 
 # +-network
 #   +-A.B.C.D
@@ -369,9 +376,9 @@ ospf = Group(Optional(suppressedKeyword('no')) +
 # +-passive-interface [passive-interface (IFNAME A.B.C.D |)]
 #   +-IFNAME [passive-interface IFNAME]
 #     +-A.B.C.D [passive-interface (IFNAME A.B.C.D |)]
-passiveInterface = Group(suppressedKeyword('passive-interface') +
-                         interfaceName('interface') +
-                         Optional(ipv4Address('ipaddress')))('passive_interface')
+passiveInterface = (suppressedKeyword('passive-interface') +
+                    interfaceName('interface') +
+                    Optional(ipv4Address('ipaddress')))
 
 # +-redistribute
 #   +-bgp [redistribute (kernel|connected|static|rip|bgp|isis|ospf (<1-65535>|)|intranet)]
@@ -461,15 +468,14 @@ redistributeStatic = Group(redistributeKeyword +
                            suppressedKeyword('static') +
                            redistributeOptions)
 
-
-redistribute = (Optional(redistributeBGP, default=None)('bgp') +
+redistribute = (Optional(redistributeKernel, default=None)('kernel') +
                 Optional(redistributeConnected, default=None)('connected') +
-                Optional(redistributeIntranet, default=None)('intranet') +
-                Optional(redistributeISIS, default=None)('isis') +
-                Optional(redistributeKernel, default=None)('kernel') +
-                Optional(redistributeOSPF, default=None)('ospf') +
+                Optional(redistributeStatic, default=None)('static') +
                 Optional(redistributeRIP, default=None)('rip') +
-                Optional(redistributeStatic, default=None)('static'))
+                Optional(redistributeOSPF, default=None)('ospf') +
+                Optional(redistributeBGP, default=None)('bgp') +
+                Optional(redistributeISIS, default=None)('isis') +
+                Optional(redistributeIntranet, default=None)('intranet'))
 
 # +-refresh
 #   +-timer
@@ -513,11 +519,11 @@ ospfTokens = (ZeroOrMore(ospf) +
               Group(redistribute)('redistribute') +
               Group(ZeroOrMore(passiveInterface))('passive_interfaces') +
               Optional(maximumArea) +
-              ZeroOrMore(host) +
+              Group(ZeroOrMore(host))('hosts') +
               Group(ZeroOrMore(area))('areas') +
               Group(ZeroOrMore(network))('networks') +
-              ZeroOrMore(defaultMetric) +
-              ZeroOrMore(distributeList) +
+              Optional(defaultMetric) +
+              Group(ZeroOrMore(distributeList))('distribute_lists') +
               ZeroOrMore(defaultInformation) +
               ZeroOrMore(distance) +
               Group(ZeroOrMore(summaryAddress))('summary_addresses') +
