@@ -26,6 +26,8 @@ from pyparsing import (Combine, Suppress, SkipTo, LineEnd, Literal, Word, nums,
                        Keyword)
 
 
+naturalNumber = Word(nums)
+
 # IP Address
 simpleIpAddress = Combine(Word(nums) + ('.' + Word(nums))*3)
 
@@ -89,15 +91,15 @@ ipv6Address = Combine(
 
 
 # IP Prefix
-ipv4Prefix =  Group(ipv4Address('network') + Suppress(Literal('/')) + Word(nums)('length'))
+ipv4Prefix = Group(ipv4Address('prefix') +
+                   Suppress(Literal('/')) +
+                   naturalNumber('length'))
 
 ipv4AddressNetwork = Group(ipv4Address('network') +
                            ipv4Address('netmask'))
 
 # ZebOS comment
 zebosComment = Suppress(Literal('!') + SkipTo(LineEnd()))
-
-naturalNumber = Word(nums)
 
 def suppressedKeyword(keyword):
     '''Suppresed (ignored keyword)'''
