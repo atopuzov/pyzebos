@@ -114,6 +114,9 @@ interfaceName = Word(printables)
 # route-map name
 routeMapName = Word(printables)
 
+# distribute-list anme
+distributeListName = Word(printables)
+
 timestamp = Group(Word(nums, max=2)('hours') + \
                   Suppress(Literal(':')) + \
                   Word(nums, max=2)('minutes') + \
