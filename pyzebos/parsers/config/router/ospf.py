@@ -333,7 +333,7 @@ networkNetwork = (ipv4AddressNetwork ^
 network = Group(suppressedKeyword('network') +
                 networkNetwork('network') +
                 suppressedKeyword('area') +
-                areaId('area'))
+                areaId('area'))('network')
 
 # +-opaque-lsa-capable [opaque-lsa-capable]
 opaqueLsaCapable = Group(suppressedKeyword('opaque-lsa-capable'))('opaque_lsa_capable')
@@ -424,27 +424,52 @@ redistributeMetric = (suppressedKeyword('metric') +
 metricType = (Keyword('1') ^
               Keyword('2'))
 redistributeMetricType = (suppressedKeyword('metric-type') +
-                          metricType('type'))
+                          metricType)
 redistributeTag = (suppressedKeyword('tag') +
-                   naturalNumber('tag'))
+                   naturalNumber)
 redistributeRouteMap = (suppressedKeyword('route-map') +
-                        routeMapName('route_map'))
-redistributeOptions = (redistributeMetric     ^
-                       redistributeMetricType ^
-                       redistributeRouteMap   ^
-                       redistributeTag)
-redistributeProtocol = (Keyword('bgp') ^
-                        Keyword('connected') ^
-                        Keyword('intranet') ^
-                        Keyword('isis') ^
-                        Keyword('kernel') ^
-                        (Keyword('ospf') +
-                         Optional(naturalNumber('process_id'), default=0)) ^
-                        Keyword('rip') ^
-                        Keyword('static'))
-redistribute = Group(suppressedKeyword('redistribute') +
-                     redistributeProtocol('protocol') +
-                     ZeroOrMore(redistributeOptions))('redistribute')
+                        routeMapName)
+
+redistributeOptions = (Optional(redistributeMetric, default=None)('metric') +
+                       Optional(redistributeMetricType, default=None)('type') +
+                       Optional(redistributeTag, default=None)('tag') +
+                       Optional(redistributeRouteMap, default=None)('route_map'))
+redistributeKeyword = suppressedKeyword('redistribute')
+redistributeBGP = Group(redistributeKeyword +
+                        suppressedKeyword('bgp') +
+                        redistributeOptions)
+redistributeConnected = Group(redistributeKeyword +
+                              suppressedKeyword('connected') +
+                              redistributeOptions)
+redistributeIntranet = Group(redistributeKeyword +
+                             suppressedKeyword('intranet') +
+                             redistributeOptions)
+redistributeISIS = Group(redistributeKeyword +
+                         suppressedKeyword('isis') +
+                         redistributeOptions)
+redistributeKernel = Group(redistributeKeyword +
+                           suppressedKeyword('kernel') +
+                           redistributeOptions)
+redistributeOSPF = Group(redistributeKeyword +
+                         suppressedKeyword('ospf') +
+                         Optional(naturalNumber('process_id'), default=0) +
+                         redistributeOptions)
+redistributeRIP = Group(redistributeKeyword +
+                        suppressedKeyword('rip') +
+                        redistributeOptions)
+redistributeStatic = Group(redistributeKeyword +
+                           suppressedKeyword('static') +
+                           redistributeOptions)
+
+
+redistribute = (Optional(redistributeBGP, default=None)('bgp') +
+                Optional(redistributeConnected, default=None)('connected') +
+                Optional(redistributeIntranet, default=None)('intranet') +
+                Optional(redistributeISIS, default=None)('isis') +
+                Optional(redistributeKernel, default=None)('kernel') +
+                Optional(redistributeOSPF, default=None)('ospf') +
+                Optional(redistributeRIP, default=None)('rip') +
+                Optional(redistributeStatic, default=None)('static'))
 
 # +-refresh
 #   +-timer
@@ -479,29 +504,31 @@ timers = Group(Keyword('timers') +
                naturalNumber('delay') +
                naturalNumber('hold'))
 
-ospfTokens = (Group(OneOrMore(area))('areas') ^
-              OneOrMore(autoCost) ^
-              OneOrMore(compatible) ^
-              OneOrMore(defaultInformation) ^
-              OneOrMore(defaultMetric) ^
-              OneOrMore(distance) ^
-              OneOrMore(distributeList) ^
-              OneOrMore(enable) ^
-              OneOrMore(host) ^
-              Group(OneOrMore(network))('networks') ^
-              maxConcurrentDD ^
-              maxUnuseLsa ^
-              maxUnusePacket ^
-              maximumArea ^
-              opaqueLsaCapable ^
-              OneOrMore(ospf) ^
-              Group(OneOrMore(passiveInterface))('passive_interfaces') ^
-              Group(OneOrMore(redistribute))('redistributes') ^
-              refresh ^
-              Group(OneOrMore(summaryAddress))('summary_addresses') ^
-              timers)
+ospfTokens = (ZeroOrMore(ospf) +
+              ZeroOrMore(compatible) +
+              ZeroOrMore(autoCost) +
+              Optional(maxConcurrentDD) +
+              ZeroOrMore(enable) +
+              ZeroOrMore(enable) +
+              Group(redistribute)('redistribute') +
+              Group(ZeroOrMore(passiveInterface))('passive_interfaces') +
+              Optional(maximumArea) +
+              ZeroOrMore(host) +
+              Group(ZeroOrMore(area))('areas') +
+              Group(ZeroOrMore(network))('networks') +
+              ZeroOrMore(defaultMetric) +
+              ZeroOrMore(distributeList) +
+              ZeroOrMore(defaultInformation) +
+              ZeroOrMore(distance) +
+              Group(ZeroOrMore(summaryAddress))('summary_addresses') +
+
+              Optional(maxUnuseLsa) +
+              Optional(maxUnusePacket) +
+              Optional(opaqueLsaCapable) +
+              Optional(refresh) +
+              Optional(timers))
 
 routerOSPF = Group(suppressedKeyword('router') +
                    suppressedKeyword('ospf') +
                    Optional(naturalNumber('process'), default='0') +
-                   ZeroOrMore(ospfTokens))('router_ospf')
+                   ospfTokens)('router_ospf')
