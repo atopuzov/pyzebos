@@ -189,6 +189,16 @@ area_statements = [
     'redistribute static route-map route-map-name',
     'redistribute static tag 10',
     'redistribute static',
+    # Distribute list
+    'distribute-list distribute_list_out out kernel 0',
+    'distribute-list distribute_list_out out connected 0',
+    'distribute-list distribute_list_out out static 0',
+    'distribute-list distribute_list_out out rip 0',
+    'distribute-list distribute_list_out out ospf 0',
+    'distribute-list distribute_list_out out bgp 0',
+    'distribute-list distribute_list_out out isis 0',
+    'distribute-list distribute_list_out out intranet 0',
+    'distribute-list distribute_list_in in',
 ]
 
 def test_ospf_parse_ok():
