@@ -208,7 +208,8 @@ matchToken = Group(suppressedKeyword('match') + matchOptions)('match')
 #     +-as
 #       +-<1-4294967295>
 #         +-A.B.C.D [set aggregator as <1-4294967295> A.B.C.D]
-setAggregator = Group(suppressedKeyword('aggregator') +
+setAggregator = Group(suppressedKeyword('set') +
+                      suppressedKeyword('aggregator') +
                       suppressedKeyword('as') +
                       naturalNumber('as') +
                       ipv4Address('ipaddress'))('aggregator')
@@ -216,13 +217,15 @@ setAggregator = Group(suppressedKeyword('aggregator') +
 #   +-as-path
 #     +-prepend
 #       +-<1-4294967295> [set as-path prepend .<1-4294967295>]
-setAsPath = Group(suppressedKeyword('as-path') +
+setAsPath = Group(suppressedKeyword('set') +
+                  suppressedKeyword('as-path') +
                   suppressedKeyword('prepend') +
                   OneOrMore(naturalNumber('as')))('as_path')
 
 #   +-atomic-aggregate [set atomic-aggregate]
-setAtomicAggregate = Group(Optional(Keyword('no')) +
-                           Keyword('atomic-aggregate'))('atomic-aggregate')
+setAtomicAggregate = (Optional(Keyword('no')) +
+                      suppressedKeyword('set') +
+                      Keyword('atomic-aggregate'))('atomic-aggregate')
 
 #   +-comm-list
 #     +-<1-99>
@@ -231,9 +234,10 @@ setAtomicAggregate = Group(Optional(Keyword('no')) +
 #       +-delete [set comm-list (<1-99>|<100-199>|WORD) delete]
 #     +-WORD
 #       +-delete [set comm-list (<1-99>|<100-199>|WORD) delete]
-setCommList = Group(suppressedKeyword('comm-list') +
-                    accesslistName('accesslist') +
-                    suppressedKeyword('delete'))('comm_list')
+setCommList = (suppressedKeyword('set') +
+               suppressedKeyword('comm-list') +
+               accesslistName('accesslist') +
+               suppressedKeyword('delete'))('community_list')
 
 # set community <1-65535>|AA:NN|internet|local-AS|no-advertise|no-export](additive)
 #   +-community
@@ -246,22 +250,25 @@ setCommList = Group(suppressedKeyword('comm-list') +
 #     +-none [set community (none)]
 communityNumberFormat = naturalNumber
 communityAANNFormat = Group(Word(nums, max=5)('aa') +
-                            Literal(':') +
+                            Suppress(Literal(':')) +
                             Word(nums, max=5)('nn'))
-communityNumber = (communityNumberFormat ^ communityAANNFormat)('community')
+communityNumber = (communityNumberFormat ^
+                   communityAANNFormat)('community_number')
 communityActions = (Keyword('internet') ^
                     Keyword('local-AS') ^
                     Keyword('no-advertise') ^
                     Keyword('no-export'))('action')
 communityInfo = Group(communityNumber +
-                      ZeroOrMore(communityActions))
-setCommunity = Group(Suppress(Keyword('community')) +
-                     OneOrMore(communityInfo) +
-                     Optional(Keyword('additive')))('community')
+                      Group(ZeroOrMore(communityActions))('actions'))
+setCommunity = (suppressedKeyword('set') +
+                Suppress(Keyword('community')) +
+                OneOrMore(communityInfo) +
+                Optional(Keyword('additive')))('community')
 
 #   +-community-additive
 #     +-AA:NN [set community-additive .AA:NN]
-communityAdditive = Group(suppressedKeyword('community-additive') +
+communityAdditive = Group(suppressedKeyword('set') +
+                          suppressedKeyword('community-additive') +
                           communityAANNFormat)('community-additive')
 
 #   +-dampening [set dampening (<1-45>|)]
@@ -270,8 +277,9 @@ communityAdditive = Group(suppressedKeyword('community-additive') +
 #         +-<1-20000>
 #           +-<1-255> [set dampening <1-45> <1-20000> <1-20000> <1-255> (<1-45>|)]
 #             +-<1-45> [set dampening <1-45> <1-20000> <1-20000> <1-255> (<1-45>|)]
-setDampening = Group(suppressedKeyword('dampening') +
-                     OneOrMore(naturalNumber('value')))('dampening')
+setDampening = Group(suppressedKeyword('set') +
+                suppressedKeyword('dampening') +
+                ZeroOrMore(naturalNumber))('dampening')
 
 # set extcommunity rt|soo [ASN:NN]+
 #   +-extcommunity
@@ -281,16 +289,22 @@ setDampening = Group(suppressedKeyword('dampening') +
 #       +-AA:NN [set extcommunity soo .AA:NN]
 extCommunityOption = (Keyword('rt') ^
                       Keyword('soo'))('type')
-setExtCommunity = Group(suppressedKeyword('extcommunity') +
-                        extCommunityOption('community') +
-                        OneOrMore(communityAANNFormat))('extcommunity')
+setExtcommunityKeyword = (suppressedKeyword('set') +
+                          suppressedKeyword('extcommunity'))
+setExtCommunityRT = (setExtcommunityKeyword +
+                     suppressedKeyword('rt') +
+                     OneOrMore(communityAANNFormat))('rt')
+setExtCommunitySOO = (setExtcommunityKeyword +
+                      suppressedKeyword('soo') +
+                      OneOrMore(communityAANNFormat))('soo')
 
 #   +-ip
 #     +-next-hop
 #       +-A.B.C.D [set ip next-hop A.B.C.D]
-setIpNextHop = Group(suppressedKeyword('ip') +
-                     Group(suppressedKeyword('next-hop') +
-                           ipv4Address('address'))('next_hop'))('ip')
+setIpNextHop = (suppressedKeyword('set') +
+                suppressedKeyword('ip') +
+                suppressedKeyword('next-hop') +
+                ipv4Address)('ip_next_hop')
 
 #   +-ipv6
 #     +-next-hop
@@ -299,16 +313,18 @@ setIpNextHop = Group(suppressedKeyword('ip') +
 #         +-X:X::X:X [set ipv6 next-hop global X:X::X:X]
 #       +-local
 #         +-X:X::X:X [set ipv6 next-hop local X:X::X:X]
-setIpv6NextHop = Group(suppressedKeyword('ipv6') +
-                       Group(suppressedKeyword('next-hop') +
-                             Optional(Keyword('local') ^
-                                      Keyword('global')) +
-                             ipv6Address('address'))('next_hop'))('ipv6')
+setIpv6NextHop = (suppressedKeyword('set') +
+                  suppressedKeyword('ipv6') +
+                  suppressedKeyword('next-hop') +
+                  Optional(Keyword('local') ^
+                           Keyword('global')) +
+                  ipv6Address)('ipv6_next_hop')
 
 #   +-local-preference
 #     +-<0-4294967295> [set local-preference <0-4294967295>]
-setLocalPreference = Group(suppressedKeyword('local-preference') +
-                           naturalNumber('preference'))('local_preference')
+setLocalPreference = (suppressedKeyword('set') +
+                      suppressedKeyword('local-preference') +
+                      naturalNumber)('local_preference')
 
 # set metric [<+/-metric>|<0-4294967295>]
 #   +-metric
@@ -316,9 +332,10 @@ setLocalPreference = Group(suppressedKeyword('local-preference') +
 #     +-<0-4294967295> [set metric (<0-4294967295>|<+/-metric>)]
 setMetricRelative = (Literal('+') ^
                      Literal('-'))
-setMetric = Group(suppressedKeyword('metric') +
-                  Optional(setMetricRelative)('relative') +
-                  naturalNumber('metric'))('metric')
+setMetric = (suppressedKeyword('set') +
+             suppressedKeyword('metric') +
+             Optional(setMetricRelative)('relative') +
+             naturalNumber)('metric')
 
 #   +-metric-type
 #     +-1 [set metric-type (1|2)]
@@ -330,9 +347,10 @@ setMetric = Group(suppressedKeyword('metric') +
 metricTypes = (Keyword('external') ^
                Keyword('internal') ^
                Keyword('type-1') ^
-               Keyword('type-2'))('metric_type')
-setMetricType = Group(suppressedKeyword('metric-type') +
-                      metricTypes)('metric_type')
+               Keyword('type-2'))
+setMetricType = (suppressedKeyword('set') +
+                 suppressedKeyword('metric-type') +
+                 metricTypes)('metric_type')
 
 #   +-origin
 #     +-egp [set origin (egp|igp|incomplete)]
@@ -340,54 +358,58 @@ setMetricType = Group(suppressedKeyword('metric-type') +
 #     +-incomplete [set origin (egp|igp|incomplete)]
 origins = (Keyword('egp') ^
            Keyword('igp') ^
-           Keyword('incomplete'))('origin')
-setOrigin = Group(suppressedKeyword('origin') +
-                  origins)('origin')
+           Keyword('incomplete'))
+setOrigin = (suppressedKeyword('set') +
+             suppressedKeyword('origin') +
+             origins)('origin')
 
 #   +-originator-id
 #     +-A.B.C.D [set originator-id A.B.C.D]
-setOriginatorId = Group(suppressedKeyword('originator-id') +
-                        ipv4Address('originator-id'))('originator_id')
+setOriginatorId = (suppressedKeyword('set') +
+                   suppressedKeyword('originator-id') +
+                   ipv4Address)('originator_id')
 
 #   +-tag
 #     +-<0-4294967295> [set tag <0-4294967295>]
-setTag = Group(suppressedKeyword('tag') +
-               naturalNumber('tag'))('stag')
+setTag = (suppressedKeyword('set') +
+          suppressedKeyword('tag') +
+          naturalNumber)('tag')
 
 # +-set
 #   +-weight
 #     +-<0-4294967295> [set weight <0-4294967295>]
-setWeight = Group(suppressedKeyword('weight') +
-                  naturalNumber('weight'))('weight')
+setWeight = (suppressedKeyword('set') +
+             suppressedKeyword('weight') +
+             naturalNumber)('weight')
 
-setOptions = (setAggregator      ^
-              setAsPath          ^
-              setAtomicAggregate ^
-              setCommList        ^
-              setCommunity       ^
-              setDampening       ^
-              setExtCommunity    ^
-              setIpNextHop       ^
-              setIpv6NextHop     ^
-              setLocalPreference ^
-              setMetric          ^
-              setMetricType      ^
-              setOrigin          ^
-              setOriginatorId    ^
-              setTag             ^
-              setWeight)
-
-setToken = Group(suppressedKeyword('set') + setOptions)('set')
+setTokens = (setAggregator      ^
+             setAsPath          ^
+             setAtomicAggregate ^
+             setCommunity       ^
+             setDampening       ^
+             setExtCommunityRT  ^
+             setExtCommunitySOO ^
+             setIpNextHop       ^
+             setIpv6NextHop     ^
+             setLocalPreference ^
+             setMetric          ^
+             setMetricType      ^
+             setOrigin          ^
+             setOriginatorId    ^
+             setTag             ^
+             setWeight          ^
+             setCommList)
 
 # route-map
 
 actionToken = (Keyword('permit') ^
                Keyword('deny'))
-routeMapTokens = (Group(OneOrMore(matchToken))('match') ^
-                  Group(OneOrMore(setToken))('set'))
+
+routeMapTokens = (Group(ZeroOrMore(matchToken))('match') +
+                  Group(ZeroOrMore(setTokens))('set'))
 
 routeMap = Group(Suppress(Keyword('route-map')) +
                  routeMapName('name') +
                  actionToken('action') +
                  naturalNumber('sequence') +
-                 ZeroOrMore(routeMapTokens))('route_map')
+                 routeMapTokens)('route_map')
