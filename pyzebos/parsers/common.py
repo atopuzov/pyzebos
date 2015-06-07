@@ -22,8 +22,7 @@
 # SOFTWARE.
 
 from pyparsing import (Combine, Suppress, SkipTo, LineEnd, Literal, Word, nums,
-                       alphanums, printables, hexnums, Group, Optional, OneOrMore,
-                       Keyword)
+                       printables, hexnums, Group, Optional, OneOrMore, Keyword)
 
 
 naturalNumber = Word(nums)
